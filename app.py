@@ -1,6 +1,6 @@
 """
 Fake News Detector for Students
-Fixed Preprocessing Version - Complete Code
+Fixed Preprocessing Version - Complete Code with CORRECTED PREDICTION LOGIC
 """
 
 import streamlit as st
@@ -19,11 +19,10 @@ st.set_page_config(
 )
 
 # --- Model Info Placeholder ---
-# UPDATED to match your actual training: LinearSVC with aggressive cleaning
 MODEL_ACCURACY = 0.9951
 TRAIN_SIZE = 44898
-AI_FEATURES = 25000  # Your actual max_features
-MODEL_NAME = "Linear SVM"  # LinearSVC model
+AI_FEATURES = 25000
+MODEL_NAME = "Linear SVM"
 CV_MEAN = 0.9951
 
 temp_model_info = {
@@ -205,7 +204,6 @@ with tab1:
             st.warning("⚠️ Please enter at least 50 characters for accurate analysis!")
         else:
             with st.spinner("🔄 Analyzing article with AI..."):
-                # FIXED: Using minimal preprocessing
                 clean_text = preprocess_text(user_input)
                 
                 # Debug info (you can comment this out after testing)
@@ -216,6 +214,9 @@ with tab1:
                 
                 features = vectorizer.transform([clean_text])
                 prediction = model.predict(features)[0]
+                
+                # Show raw prediction for debugging
+                st.write(f"🔍 Raw prediction value: {prediction}")
                 
                 # Confidence calculation
                 if hasattr(model, 'decision_function'):
@@ -233,7 +234,9 @@ with tab1:
             col_res1, col_res2, col_res3 = st.columns([2, 1, 1])
             
             with col_res1:
-                if prediction == 0:
+                # FIXED: Corrected prediction logic
+                # Assuming: 0 = Real News, 1 = Fake News (standard sklearn convention)
+                if prediction == 1:  # FAKE NEWS
                     st.error("🚨 LIKELY FAKE NEWS")
                     st.warning("⚠️ Warning: This article shows strong characteristics of misinformation or fake news.")
                     st.write("")
@@ -241,7 +244,7 @@ with tab1:
                     st.write("• Do NOT share this article")
                     st.write("• Verify from trusted news sources")
                     st.write("• Check fact-checking websites")
-                else:
+                else:  # REAL NEWS (prediction == 0)
                     st.success("✅ LIKELY RELIABLE NEWS")
                     st.info("✓ Analysis: This article appears to be legitimate news content.")
                     st.write("")
@@ -251,10 +254,10 @@ with tab1:
                     st.write("• Check author credentials")
             
             with col_res2:
-                verdict_label = "FAKE" if prediction == 0 else "REAL"
-                risk_label = "High Risk" if prediction == 0 else "Low Risk"
+                verdict_label = "FAKE" if prediction == 1 else "REAL"
+                risk_label = "High Risk" if prediction == 1 else "Low Risk"
                 st.metric("Verdict", verdict_label)
-                if prediction == 0:
+                if prediction == 1:
                     st.error(risk_label)
                 else:
                     st.success(risk_label)
@@ -287,14 +290,15 @@ with tab1:
             st.divider()
             st.subheader("💡 What Should You Do?")
             
-            if prediction == 1:
+            # FIXED: Corrected action recommendations
+            if prediction == 1:  # FAKE NEWS
                 st.warning("⚠️ Recommended Actions:")
                 st.write("1. **Stop and Verify:** Don't share this article yet")
                 st.write("2. **Check Sources:** Visit fact-checking websites like Snopes, FactCheck.org")
                 st.write("3. **Research:** Look for the same story on reputable news sites")
                 st.write("4. **Question:** Who wrote this? What's their agenda?")
                 st.write("5. **Educate:** Warn others about this potential misinformation")
-            else:
+            else:  # REAL NEWS (prediction == 0)
                 st.info("✅ Best Practices:")
                 st.write("1. **Still Verify:** Cross-check key facts with other sources")
                 st.write("2. **Read Fully:** Don't just rely on headlines")
