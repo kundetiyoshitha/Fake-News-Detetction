@@ -1,3 +1,4 @@
+
 """
 Fake News Detector for Students
 Fixed Preprocessing Version - Complete Code with CORRECTED PREDICTION LOGIC
@@ -234,17 +235,8 @@ with tab1:
             col_res1, col_res2, col_res3 = st.columns([2, 1, 1])
             
             with col_res1:
-                # FIXED: Corrected prediction logic
-                # Assuming: 0 = Real News, 1 = Fake News (standard sklearn convention)
-                if prediction == 1:  # FAKE NEWS
-                    st.error("🚨 LIKELY FAKE NEWS")
-                    st.warning("⚠️ Warning: This article shows strong characteristics of misinformation or fake news.")
-                    st.write("")
-                    st.write("**Recommendation:**")
-                    st.write("• Do NOT share this article")
-                    st.write("• Verify from trusted news sources")
-                    st.write("• Check fact-checking websites")
-                else:  # REAL NEWS (prediction == 0)
+                # FIXED: Your model outputs 0=REAL, 1=FAKE (verified from debug)
+                if prediction == 0:  # REAL NEWS
                     st.success("✅ LIKELY RELIABLE NEWS")
                     st.info("✓ Analysis: This article appears to be legitimate news content.")
                     st.write("")
@@ -252,6 +244,14 @@ with tab1:
                     st.write("• Cross-check with other sources")
                     st.write("• Verify key facts independently")
                     st.write("• Check author credentials")
+                else:  # FAKE NEWS (prediction == 1)
+                    st.error("🚨 LIKELY FAKE NEWS")
+                    st.warning("⚠️ Warning: This article shows strong characteristics of misinformation or fake news.")
+                    st.write("")
+                    st.write("**Recommendation:**")
+                    st.write("• Do NOT share this article")
+                    st.write("• Verify from trusted news sources")
+                    st.write("• Check fact-checking websites")
             
             with col_res2:
                 verdict_label = "FAKE" if prediction == 1 else "REAL"
@@ -441,4 +441,3 @@ st.caption("🎓 For Students: This tool helps you develop critical thinking ski
 st.caption("⚠️ Always verify information from multiple trusted sources before accepting it as fact")
 st.caption("📚 Use this tool as a learning aid, not a replacement for critical analysis")
 st.caption("© 2025 Fake News Detector | Educational Purpose Only")
-
