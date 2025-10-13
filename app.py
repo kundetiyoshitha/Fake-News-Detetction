@@ -441,3 +441,4 @@ st.caption("🎓 For Students: This tool helps you develop critical thinking ski
 st.caption("⚠️ Always verify information from multiple trusted sources before accepting it as fact")
 st.caption("📚 Use this tool as a learning aid, not a replacement for critical analysis")
 st.caption("© 2025 Fake News Detector | Educational Purpose Only")
+
